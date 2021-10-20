@@ -15,25 +15,6 @@ class AffineEncDec:
         self.M = 26  # because in total there are 26 characters(all characters will be considered in Uppercase)
         # Note: a & m are coprime. Hence inv(a) exist -> will be required in decryptint the text later on.
 
-    # Helper Functions
-    # Extended Euclidean Algorithm for finding modular inverse
-    def egcd(self, a, b):
-        x, y, u, v = 0, 1, 1, 0
-        while a != 0:
-            q, r = b // a, b % a
-            m, n = x - u * q, y - v * q
-            b, a, x, y, u, v = a, r, u, v, m, n
-        gcd = b
-        return gcd, x, y
-
-    # function to find modulo inverse i.e `a mod m ~= 1 mod m`
-    def modinv(self, a, m):
-        gcd, x, y = self.egcd(a, m)
-        if gcd != 1:
-            return None  # modular inverse does not exist
-        else:
-            return x % m
-
     def encrypt(self, text):
         """
         Ans = (A*x + B) % M, where x is the character in text
@@ -60,6 +41,25 @@ class AffineEncDec:
                 for letter in cipher
             ]
         )
+
+    # Helper Functions
+    # Extended Euclidean Algorithm for finding modular inverse
+    def egcd(self, a, b):
+        x, y, u, v = 0, 1, 1, 0
+        while a != 0:
+            q, r = b // a, b % a
+            m, n = x - u * q, y - v * q
+            b, a, x, y, u, v = a, r, u, v, m, n
+        gcd = b
+        return gcd, x, y
+
+    # function to find modulo inverse i.e `a mod m ~= 1 mod m`
+    def modinv(self, a, m):
+        gcd, x, y = self.egcd(a, m)
+        if gcd != 1:
+            return None  # modular inverse does not exist
+        else:
+            return x % m
 
 
 def main():
