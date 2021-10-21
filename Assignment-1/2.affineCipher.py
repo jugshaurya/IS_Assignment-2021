@@ -73,7 +73,7 @@ def main():
     encryptedText = affine.encrypt(text)
     print("Encrypted Text: ", encryptedText)
 
-    # Decrpyption
+    # Decryption
     decryptedText = affine.decrypt(encryptedText)
     print("Decrypted Text: ", decryptedText)
 

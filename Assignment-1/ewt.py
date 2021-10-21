@@ -8,10 +8,11 @@
 
 class HillCipher:
     
-    # Helper function to convert ascii to character
-    def getChar(self, ascii):
-        return chr(ascii + 65)
-
+    def __init__(self, key='SHAU'):
+        self.key = key
+        self.keyMatrix, self.determinant = getKeyMatrix()
+        self.inverseKeyMatrix = getInverseKeyMatrix()
+    
     # Task1. Filling ascii values of key in 2 X 2 Matrix as key matrix
     # Task2: calculating keymatrix determinant
     def getKeyMatrix(self):
@@ -26,6 +27,10 @@ class HillCipher:
         
         determinant = (keyMatrix[0][0] * keyMatrix[1][1] - keyMatrix[0][1] * keyMatrix[1][0]) % 26
         return (keyMatrix, determinant)      
+
+    # Helper function to convert ascii to character
+    def getChar(self, ascii):
+        return chr(ascii + 65)
 
     def getInverseKeyMatrix(self):
         # get Inverse of Key matrix , will be used in decryption
@@ -45,47 +50,43 @@ class HillCipher:
         
         return inverseKeyMatrix
 
-    def __init__(self, key='SHAU'):
-        self.key = key
-        (self.keyMatrix, self.determinant) = self.getKeyMatrix()
-        self.inverseKeyMatrix = self.getInverseKeyMatrix()
-    
     def encrypt(self, text):
         if(len(text) & 1 ):
             raise Exception("")
       
         encryptedtext  = ""
         count = 0
-        while count < len(text):
-            vector = [ord(text[count]) - ord('A'), ord(text[count + 1]) - ord('A')]
+        while count < len(self.text):
+            vector = [ord(self.text[count]) - ord('A') + 1, ord(self.text[count + 1]) - ord('A') + 1]
             vector = [(self.keyMatrix[0][0] * vector[0] + self.keyMatrix[0][1] * vector[1]) % 26,
                     (self.keyMatrix[1][0] * vector[0] + self.keyMatrix[1][1] * vector[1]) % 26]
-            cipher_text = [chr(vector[i] + ord('A') ) for i in range(2)]
+            cipher_text = [chr(vector[i] + ord('A') - 1) for i in range(2)]
             encryptedtext  += ''.join(cipher_text)
             count += 2
         return encryptedtext 
 
     def decrypt(self,cipher):
-        if(len(cipher) & 1 ):
-            raise Exception("")
-
         output = ""
+        if len(cipher) % 2 != 0:
+            cipher += "0"
         count = 0
+        # decryption
         while count < len(cipher):
-            vector = [ord(cipher[count]) - ord('A'), ord(cipher[count + 1]) - ord('A')]
+            vector = [ord(cipher[count]) - ord('A') + 1, ord(cipher[count + 1]) - ord('A') + 1]
             count += 2
             vector = [(self.inverseKeyMatrix[0][0] * vector[0] + self.inverseKeyMatrix[0][1] * vector[1]) % 26,
                     (self.inverseKeyMatrix[1][0] * vector[0] + self.inverseKeyMatrix[1][1] * vector[1]) % 26]
-            text = [chr(vector[i] + ord('A')) for i in range(2)]
+            text = [chr(vector[i] + ord('A') - 1) for i in range(2)]
             output += ''.join(text)
         return output
 
 def main():
 
-    hillCipher = HillCipher()
-    
+
     print("Enter the text to be decoded of even length: ")
     text = input().replace(" ", "")
+
+    hillCipher = HillCipher()
 
     # Encryption
     encryptedText = hillCipher.encrypt(text)

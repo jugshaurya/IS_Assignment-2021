@@ -54,7 +54,7 @@ def main():
     encryptedText = additive.encrypt(text)
     print("Encrypted Text: ", encryptedText)
 
-    # Decrpyption
+    # Decryption
     decryptedText = additive.decrypt(encryptedText)
     print("Decrypted Text: ", decryptedText)
 
